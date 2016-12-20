@@ -1,4 +1,4 @@
-cards = [['a', 'a', 'b', 'c'],
+card_arrays = [['a', 'a', 'b', 'c'],
 ['d', 'e', 'a', 'f'],
 ['d', 'f', 'd', 'e'],
 ['d', 'e', 'f', 'g'],
@@ -15,23 +15,53 @@ cards = [['a', 'a', 'b', 'c'],
 ['d', 'e', 'a', 'f'],
 ['d', 'h', 'e', 'a']]
 
-grid_size = len(cards)
 
 class Card:
-    
+    def __init__(self, sides):
+        self.sides = sides
+
+    sides = ['x', 'x', 'x', 'x']
+
+    def get_side(s):
+        return sides[s]
+
+
+cards = []
+
+for array in card_arrays:
+    cards.append(Card(array))
+
+valid_cards = [Card(['a', 'a', 'a', 'a']), Card(['a', 'a', 'a', 'a'])]    
+
 
 def rotate_card(card):
     return card[1:] + card[:1]
 
 def check_fit(grid):
-    return 0
+    for position, card in enumerate(grid):
+        neighbours = get_neighbours(grid, position)
+        for side, value in enumerate(card):
+            if (neighbours[side] != value and neighbours[side] != None):
+                print neighbours[side]
+                print value
+                return False
+    
+    return True
 
+# Bollocks at the moment, need to integrate Cards class
 def get_neighbours(grid, index):
-    # Don't want to wrap...
-    top = (index - 4) % grid_size
-    right = (index + 1) % grid_size
-    bottom = (index + 4) % grid_size
-    left = (index - 1) % grid_size
+    grid_size = len(grid)
+    neighbour_indices = [(index - 4),
+                        (index + 1),
+                        (index + 4),
+                        (index - 1)]
+    
+    neighbours = [-1, -1, -1 ,-1]
 
-    neighbours = [cards[top][2], cards[right][3], cards[bottom][0], cards[left][1]]
+    for index, val in enumerate(neighbour_indices):
+        if (val < 0 or val > (grid_size - 1)):
+            neighbours[index] = None
+        else:
+            neighbours[index] = grid[val]
+
     return neighbours
